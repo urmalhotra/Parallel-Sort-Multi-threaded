@@ -13,39 +13,36 @@ typedef struct rec {
     int value[24]; // 96 bytes
 } rec_t;
 
-int get_records(struct rec_t **elements, int MAX, FILE* filename){
-    printf("%i", MAX);
-    elements = malloc(MAX * sizeof(struct rec_t *));
-    printf("%i", MAX);
-    char *instruction;
-    int curr_key =  *(int *)&filename;
-    printf("%i", curr_key);
-    while(fgets(instruction, 100, filename)){
-        int curr_key =  *(int *)&instruction;
-        printf("%i", curr_key);
+unsigned int  byte_to_int (unsigned char* buffer){
+    return (buffer[0] << 24) + (buffer[1] << 16) + (buffer [2] << 8) + buffer[3];
+}
+
+int get_records(rec_t *elements, FILE* filename){
+    struct stat st;
+    if(stat(filename, &st) == -1){
+    exit(0);
     }
-    fclose(filename);
+    int a  = sizeof(rec_t);
+    int f_size = st.st_size;
+    int MAX = f_size/100;
+    FILE* input = fopen(filename, "rb");
+    elements = malloc(sizeof(rec_t) *MAX);
+    if (input == NULL){
+        exit(0);
+    }
+
+    if(fread(elements, sizeof(rec_t), MAX, input) !=MAX)
+    {
+        printf("error");
+    }
+    fclose(input);
     return 0;
 }
 
 int main(int argc, char *argv[])
 {
-    FILE* input = argv[1];
-    FILE* output;
-    struct stat st;
-    if(stat(input, &st) == -1){
-    exit(0);
-    }
-    int f_size = st.st_size;
-    printf("umsdj");
-    int MAX = f_size/100;
-    printf("%d", MAX);
-    input = fopen(argv[1], "r");
-    //output = fopen(argv[2], "w");
-    if (input == NULL) {
-       exit(1);
-    }
-    struct rec_t **elements;
-    get_records(elements, MAX, input);
+    rec_t *elements;
+    FILE* inp = argv[1];
+    get_records(elements, inp);
     return 0;
     }
