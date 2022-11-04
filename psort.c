@@ -14,9 +14,12 @@ typedef struct rec {
 } rec_t;
 
 int get_records(struct rec_t **elements, int MAX, FILE* filename){
-    printf("ayo\n");
+    printf("%i", MAX);
     elements = malloc(MAX * sizeof(struct rec_t *));
+    printf("%i", MAX);
     char *instruction;
+    int curr_key =  *(int *)&filename;
+    printf("%i", curr_key);
     while(fgets(instruction, 100, filename)){
         int curr_key =  *(int *)&instruction;
         printf("%i", curr_key);
@@ -34,7 +37,9 @@ int main(int argc, char *argv[])
     exit(0);
     }
     int f_size = st.st_size;
+    printf("umsdj");
     int MAX = f_size/100;
+    printf("%d", MAX);
     input = fopen(argv[1], "r");
     //output = fopen(argv[2], "w");
     if (input == NULL) {
